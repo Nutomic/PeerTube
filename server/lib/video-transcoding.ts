@@ -8,7 +8,7 @@ import { VideoFileModel } from '../models/video/video-file'
 import { VideoModel } from '../models/video/video'
 
 async function optimizeOriginalVideofile (video: VideoModel) {
-  const videosDirectory = CONFIG.STORAGE.VIDEOS_DIR
+  const videosDirectory = CONFIG.STORAGE.VIDEOS_CACHE_DIR
   const newExtname = '.mp4'
   const inputVideoFile = video.getOriginalFile()
   const videoInputPath = join(videosDirectory, video.getVideoFilename(inputVideoFile))
@@ -37,6 +37,7 @@ async function optimizeOriginalVideofile (video: VideoModel) {
     inputVideoFile.set('fps', fps)
 
     await video.createTorrentAndSetInfoHash(inputVideoFile)
+    await copyVideoToPersistentStorage(inputVideoFile)
     await inputVideoFile.save()
   } catch (err) {
     // Auto destruction...
@@ -47,7 +48,7 @@ async function optimizeOriginalVideofile (video: VideoModel) {
 }
 
 async function transcodeOriginalVideofile (video: VideoModel, resolution: VideoResolution, isPortraitMode: boolean) {
-  const videosDirectory = CONFIG.STORAGE.VIDEOS_DIR
+  const videosDirectory = CONFIG.STORAGE.VIDEOS_CACHE_DIR
   const extname = '.mp4'
 
   // We are sure it's x264 in mp4 because optimizeOriginalVideofile was already executed
@@ -79,6 +80,8 @@ async function transcodeOriginalVideofile (video: VideoModel, resolution: VideoR
   await video.createTorrentAndSetInfoHash(newVideoFile)
 
   await newVideoFile.save()
+
+  await copyVideoToPersistentStorage(newVideoFile)
 
   video.VideoFiles.push(newVideoFile)
 }
@@ -120,7 +123,18 @@ async function importVideoFile (video: VideoModel, inputFilePath: string) {
 
   await updatedVideoFile.save()
 
+  await copyVideoToPersistentStorage(updatedVideoFile)
+
   video.VideoFiles.push(updatedVideoFile)
+}
+
+async function copyVideoToPersistentStorage (videoFile: VideoFileModel) {
+  const videoFileName = videoFile.videoId + '.' + videoFile.extname
+  const cachedVideoPath = join(CONFIG.STORAGE.VIDEOS_CACHE_DIR, videoFileName)
+  const persistentVideoPath = join(CONFIG.STORAGE.VIDEOS_CACHE_DIR, videoFileName)
+  await copy(cachedVideoPath, persistentVideoPath)
+  // TODO: or add video to cache if enabled, so we don't have to copy it around all the time
+  remove(cachedVideoPath)
 }
 
 export {

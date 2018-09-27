@@ -37,6 +37,7 @@ const videosPhysicalPath = CONFIG.STORAGE.VIDEOS_DIR
 staticRouter.use(
   STATIC_PATHS.WEBSEED,
   cors(),
+  // TODO: this needs to pick either cache or normal video folder
   express.static(videosPhysicalPath)
 )
 staticRouter.use(

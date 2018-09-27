@@ -29,6 +29,9 @@ export class VideosRedundancyScheduler extends AbstractScheduler {
 
     this.executing = true
 
+    // Remove expired videos first to free up space.
+    await this.removeExpired()
+
     for (const obj of CONFIG.REDUNDANCY.VIDEOS.STRATEGIES) {
       try {
         const videoToDuplicate = await this.findVideoToDuplicate(obj)
@@ -49,8 +52,6 @@ export class VideosRedundancyScheduler extends AbstractScheduler {
         logger.error('Cannot run videos redundancy %s.', obj.strategy, { err })
       }
     }
-
-    await this.removeExpired()
 
     this.executing = false
   }
@@ -114,7 +115,7 @@ export class VideosRedundancyScheduler extends AbstractScheduler {
 
       const tmpPath = await downloadWebTorrentVideo({ magnetUri }, JOB_TTL['video-import'])
 
-      const destPath = join(CONFIG.STORAGE.VIDEOS_DIR, video.getVideoFilename(file))
+      const destPath = join(CONFIG.STORAGE.VIDEOS_CACHE_DIR, video.getVideoFilename(file))
       await rename(tmpPath, destPath)
 
       const createdModel = await VideoRedundancyModel.create({

@@ -47,7 +47,7 @@ function generateVideoTmpPath (target: string | ParseTorrent) {
   const id = typeof target === 'string' ? target : target.infoHash
 
   const hash = sha256(id)
-  return join(CONFIG.STORAGE.VIDEOS_DIR, hash + '-import.mp4')
+  return join(CONFIG.STORAGE.VIDEOS_CACHE_DIR, hash + '-import.mp4')
 }
 
 function getSecureTorrentName (originalName: string) {

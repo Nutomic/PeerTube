@@ -18,7 +18,7 @@ function downloadWebTorrentVideo (target: { magnetUri: string, torrentName?: str
 
     const torrentId = target.magnetUri || join(CONFIG.STORAGE.TORRENTS_DIR, target.torrentName)
 
-    const options = { path: CONFIG.STORAGE.VIDEOS_DIR }
+    const options = { path: CONFIG.STORAGE.VIDEOS_CACHE_DIR }
     const torrent = webtorrent.add(torrentId, options, torrent => {
       if (torrent.files.length !== 1) {
         if (timer) clearTimeout(timer)

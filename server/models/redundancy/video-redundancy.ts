@@ -332,6 +332,10 @@ export class VideoRedundancyModel extends Model<VideoRedundancyModel> {
               required: true,
               where: {
                 redundancyAllowed: true
+              },
+              or: {
+                required: CONFIG.REDUNDANCY.VIDEOS.CACHE_LOCAL_VIDEOS_ENABLED,
+                host: CONFIG.INSTANCE.NAME
               }
             }
           ]

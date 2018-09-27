@@ -181,6 +181,7 @@ const CONFIG = {
     AVATARS_DIR: buildPath(config.get<string>('storage.avatars')),
     LOG_DIR: buildPath(config.get<string>('storage.logs')),
     VIDEOS_DIR: buildPath(config.get<string>('storage.videos')),
+    VIDEOS_CACHE_DIR: buildPath(config.get<string>('storage.videos_cache')),
     THUMBNAILS_DIR: buildPath(config.get<string>('storage.thumbnails')),
     PREVIEWS_DIR: buildPath(config.get<string>('storage.previews')),
     CAPTIONS_DIR: buildPath(config.get<string>('storage.captions')),
@@ -213,7 +214,8 @@ const CONFIG = {
   REDUNDANCY: {
     VIDEOS: {
       CHECK_INTERVAL: parseDuration(config.get<string>('redundancy.videos.check_interval')),
-      STRATEGIES: buildVideosRedundancy(config.get<any[]>('redundancy.videos.strategies'))
+      STRATEGIES: buildVideosRedundancy(config.get<any[]>('redundancy.videos.strategies')),
+      CACHE_LOCAL_VIDEOS_ENABLED: config.get<boolean>('redundancy.videos.cacheLocalVideosEnabled')
     }
   },
   ADMIN: {

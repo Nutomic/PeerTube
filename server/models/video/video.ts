@@ -3,6 +3,7 @@ import { maxBy } from 'lodash'
 import * as magnetUtil from 'magnet-uri'
 import * as parseTorrent from 'parse-torrent'
 import { join } from 'path'
+import { existsSync } from 'fs'
 import * as Sequelize from 'sequelize'
 import {
   AllowNull,
@@ -92,6 +93,7 @@ import {
   videoModelToFormattedJSON
 } from './video-format-utils'
 import * as validator from 'validator'
+import { dir } from 'async'
 
 // FIXME: Define indexes here because there is an issue with TS and Sequelize.literal when called directly in the annotation
 const indexes: Sequelize.DefineIndexesOptions[] = [
@@ -1349,7 +1351,13 @@ export class VideoModel extends Model<VideoModel> {
   }
 
   getVideoFilePath (videoFile: VideoFileModel) {
-    return join(CONFIG.STORAGE.VIDEOS_DIR, this.getVideoFilename(videoFile))
+    const cachedPath = join(CONFIG.STORAGE.VIDEOS_CACHE_DIR, this.getVideoFilename(videoFile))
+    const persistentPath = join(CONFIG.STORAGE.VIDEOS_DIR, this.getVideoFilename(videoFile))
+    if (existsSync(cachedPath)) {
+      return cachedPath
+    } else {
+      return persistentPath
+    }
   }
 
   async createTorrentAndSetInfoHash (videoFile: VideoFileModel) {

@@ -47,6 +47,7 @@ smtp:
 storage:
   avatars: 'storage/avatars/'
   videos: 'storage/videos/'
+  videos_cache: 'storage/videos-cache/'
   logs: 'storage/logs/'
   previews: 'storage/previews/'
   thumbnails: 'storage/thumbnails/'
@@ -83,6 +84,7 @@ redundancy:
 #        size: '10GB'
 #        strategy: 'recently-added' # Cache recently added videos
 #        minViews: 10 # Having at least x views
+    cacheLocalVideosEnabled: false
 
 cache:
   previews:

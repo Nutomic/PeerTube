@@ -94,6 +94,7 @@ export class EditCustomConfigComponent extends FormReactive implements OnInit {
       importVideosHttpEnabled: null,
       importVideosTorrentEnabled: null,
       adminEmail: this.customConfigValidatorsService.ADMIN_EMAIL,
+      cacheLocalVideosEnabled: null,
       userVideoQuota: this.userValidatorsService.USER_VIDEO_QUOTA,
       userVideoQuotaDaily: this.userValidatorsService.USER_VIDEO_QUOTA_DAILY,
       transcodingThreads: this.customConfigValidatorsService.TRANSCODING_THREADS,

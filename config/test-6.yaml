@@ -12,6 +12,7 @@ database:
 storage:
   avatars: 'test6/avatars/'
   videos: 'test6/videos/'
+  videos_cache: 'test6/videos-cache/'
   logs: 'test6/logs/'
   previews: 'test6/previews/'
   thumbnails: 'test6/thumbnails/'
